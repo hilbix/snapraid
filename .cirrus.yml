@@ -10,13 +10,13 @@
 ##     image: gcc:8
 ##     image: gcc:7
 
-# This fails due to: missing aclocal
+# Works?
 osx_task:
   brew_script: brew install autoconf automake
   prep_script: autoreconf -i
-# configure_script: ./configure --enable-warning-as-error
-# make_script: make all
-# check_script: make distcheck
+  configure_script: ./configure --enable-warning-as-error
+  make_script: make all
+  check_script: make distcheck
   osx_instance:
     matrix:
       image: mojave-xcode
