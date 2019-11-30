@@ -1,35 +1,53 @@
-# Works
-#gcc_task:
-#  prep_script: autoreconf -i
-#  configure_script: ./configure --enable-warning-as-error
-#  make_script: make all
-## check_script: make distcheck
-#  container:
-#    matrix:
-#      image: gcc:latest
-##     image: gcc:8
-##     image: gcc:7
+# Note that I switched off "distcheck" to use less ressources on Cirrus-CI
 
-# Works?
-osx_task:
-  brew_script: brew install autoconf automake
+# Works
+gcc_task:
   prep_script: autoreconf -i
   configure_script: ./configure --enable-warning-as-error
   make_script: make all
-  check_script: make distcheck
-  osx_instance:
-    matrix:
-      image: mojave-xcode
-#     image: mojave-xcode-10.3
+  check_script: [ master != "$CIRRUS_BRANCH" ] || [ -n "$CIRRUS_PR" ] || make distcheck
+  container:
+    image: gcc:latest
+
+oldgcc_task:
+  depends_on:
+    - gcc
+#  prep_script: autoreconf -i
+#  configure_script: ./configure --enable-warning-as-error
+#  make_script: make all
+#  check_script: [ master != "$CIRRUS_BRANCH" ] || [ -n "$CIRRUS_PR" ] || make distcheck
+#  container:
+#    matrix:
+##     image: gcc:8
+##     image: gcc:7
+
+# Works
+#osx_task:
+#  depends_on:
+#    - gcc
+#  brew_script: brew install autoconf automake
+#  prep_script: autoreconf -i
+#  configure_script: ./configure --enable-warning-as-error
+#  make_script: make all
+#  check_script: [ master != "$CIRRUS_BRANCH" ] || [ -n "$CIRRUS_PR" ] || make distcheck
+#  osx_instance:
+#    matrix:
+#      image: mojave-xcode
+##     image: mojave-xcode-10.3
 
 # This fails due to: missing autoreconf
-#freebsd_task:
-#  prep_script: autoreconf -i
-## configure_script: ./configure --enable-warning-as-error
-## make_script: make all
-## check_script: make distcheck
-#  freebsd_instance:
-#    matrix:
-#      image_family: freebsd-13-0-snap
-##     image_family: freebsd-12-1-snap
+freebsd_task:
+#  depends_on:
+#    - gcc
+# bootstrap_script: env ASSUME_ALWAYS_YES=YES pkg bootstrap
+  pkg_script: env ASSUME_ALWAYS_YES=YES pkg install autoconf automake
+  prep_script: autoreconf -i
+  configure_script: ./configure --enable-warning-as-error
+  make_script: make all
+# check_script: [ master != "$CIRRUS_BRANCH" ] || [ -n "$CIRRUS_PR" ] || make distcheck
+  check_script: make distcheck
+  freebsd_instance:
+    matrix:
+      image_family: freebsd-13-0-snap
+#     image_family: freebsd-12-1-snap
 
