@@ -8,6 +8,8 @@ gcc_task:
   container:
     image: gcc:latest
 
+# Be nice to the CI, only run the others if the initial task succeeds
+
 oldgcc_task:
   depends_on:
     - gcc
@@ -18,7 +20,7 @@ oldgcc_task:
   container:
     matrix:
       image: gcc:8
-#     image: gcc:7
+      image: gcc:7
 
 osx_task:
   depends_on:
