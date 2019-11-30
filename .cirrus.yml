@@ -9,9 +9,9 @@ gcc_task:
   container:
     image: gcc:latest
 
-oldgcc_task:
-  depends_on:
-    - gcc
+#oldgcc_task:
+#  depends_on:
+#    - gcc
 #  prep_script: autoreconf -i
 #  configure_script: ./configure --enable-warning-as-error
 #  make_script: make all
