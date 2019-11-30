@@ -42,7 +42,8 @@ freebsd_task:
 # bootstrap_script: env ASSUME_ALWAYS_YES=YES pkg bootstrap
   pkg_script: env ASSUME_ALWAYS_YES=YES pkg install autoconf automake
   prep_script: autoreconf -i
-  configure_script: ./configure --enable-warning-as-error
+#  configure_script: ./configure --enable-warning-as-error
+  configure_script: ./configure
   make_script: make all
 # check_script: '[ master != "$CIRRUS_BRANCH" ] || [ -n "$CIRRUS_PR" ] || make distcheck'
   check_script: make distcheck
