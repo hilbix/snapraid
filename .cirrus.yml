@@ -1,4 +1,5 @@
 # Only run "distcheck" for "master" or PRs.
+# Note: I do not know (yet) how to do Cirrus CI with clang
 
 gcc_task:
   prep_script: autoreconf -i
