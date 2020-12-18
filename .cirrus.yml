@@ -1,90 +1,11 @@
-# Only run "distcheck" for "master" or PRs.
 # Note: I do not know (yet) how to do Cirrus CI with clang
-# Note: I do not know (yet) how to do it with Windows
 
-gcc_task:
+clang_task:
   prep_script: autoreconf -i
 #  configure_script: ./configure --enable-warning-as-error	# fails with: -Werror=zero-length-bounds
   configure_script: ./configure
   make_script: make all
   check_script: '[ master != "$CIRRUS_BRANCH" ] && [ -z "$CIRRUS_PR" ] || make distcheck'
   container:
-    image: gcc:latest
-
-# Be nice to the CI, only run the others if the initial task succeeds
-
-old_gcc_task:
-  depends_on:
-    - gcc
-  prep_script: autoreconf -i
-  configure_script: ./configure --enable-warning-as-error
-  make_script: make all
-  check_script: '[ master != "$CIRRUS_BRANCH" ] && [ -z "$CIRRUS_PR" ] || make distcheck'
-  container:
-    matrix:
-      image: gcc:8
-      image: gcc:7
-
-# See https://github.com/cirruslabs/osx-images
-osx_task:
-  depends_on:
-    - gcc
-  brew_script: brew install autoconf automake
-  prep_script: autoreconf -i
-  configure_script: ./configure --enable-warning-as-error
-  make_script: make all
-  check_script: '[ master != "$CIRRUS_BRANCH" ] && [ -z "$CIRRUS_PR" ] || make distcheck'
-  osx_instance:
-    matrix:
-      image: catalina-xcode
-      image: big-sur-xcode-12.3
-
-# See https://cirrus-ci.org/guide/macOS/
-old_osx_task:
-  depends_on:
-    - osx
-  brew_script: brew install autoconf automake
-  prep_script: autoreconf -i
-  configure_script: ./configure --enable-warning-as-error
-  make_script: make all
-  check_script: '[ master != "$CIRRUS_BRANCH" ] && [ -z "$CIRRUS_PR" ] || make distcheck'
-  osx_instance:
-    matrix:
-      image: catalina-xcode-11.3.1
-      image: catalina-xcode-11.4.1
-      image: catalina-xcode-11.5
-      image: catalina-xcode-11.6
-      image: catalina-xcode-12.0
-      image: catalina-xcode-12.1
-
-# See https://cirrus-ci.org/guide/FreeBSD/
-freebsd_task:
-  depends_on:
-    - gcc
-  pkg_script: env ASSUME_ALWAYS_YES=YES pkg install autoconf automake
-  prep_script: autoreconf -i
-#  configure_script: ./configure --enable-warning-as-error	# for some unknown reason this is errors due to -Wunused-function
-  configure_script: ./configure
-  make_script: make all
-  check_script: '[ master != "$CIRRUS_BRANCH" ] && [ -z "$CIRRUS_PR" ] || make distcheck'
-  freebsd_instance:
-    matrix:
-      image_family: freebsd-13-0-snap
-      image_family: freebsd-12-1-snap
-
-old_freebsd_task:
-  depends_on:
-    - freebsd
-  pkg_script: env ASSUME_ALWAYS_YES=YES pkg install autoconf automake
-  prep_script: autoreconf -i
-#  configure_script: ./configure --enable-warning-as-error	# for some unknown reason this is errors due to -Wunused-function
-  configure_script: ./configure
-  make_script: make all
-  check_script: '[ master != "$CIRRUS_BRANCH" ] && [ -z "$CIRRUS_PR" ] || make distcheck'
-  freebsd_instance:
-    matrix:
-      image_family: freebsd-12-1
-      image_family: freebsd-12-0
-      image_family: freebsd-11-4
-      image_family: freebsd-11-3-snap
+    image: clang:latest
 
