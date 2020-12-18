@@ -37,7 +37,7 @@ osx_task:
   osx_instance:
     matrix:
       image: catalina-xcode
-      image: big-sur-xcode
+      image: big-sur-xcode-12.3
 
 # See https://cirrus-ci.org/guide/macOS/
 old_osx_task:
@@ -77,8 +77,8 @@ old_freebsd_task:
     - freebsd
   pkg_script: env ASSUME_ALWAYS_YES=YES pkg install autoconf automake
   prep_script: autoreconf -i
-  configure_script: ./configure --enable-warning-as-error	# for some unknown reason this is errors due to -Wunused-function
-#  configure_script: ./configure
+#  configure_script: ./configure --enable-warning-as-error	# for some unknown reason this is errors due to -Wunused-function
+  configure_script: ./configure
   make_script: make all
   check_script: '[ master != "$CIRRUS_BRANCH" ] && [ -z "$CIRRUS_PR" ] || make distcheck'
   freebsd_instance:
